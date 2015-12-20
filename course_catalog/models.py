@@ -177,7 +177,9 @@ class Building(models.Model):
     name = models.CharField(max_length=50)
     address = models.CharField(max_length=100)
     campus = models.CharField(max_length=50)
-    url = models.URLField()
+
+    def __unicode__(self):
+        return self.name
 
 
 class Department(models.Model):
