@@ -56,8 +56,13 @@ def get_course_information(course_id, link, links, skipped_rows, discipline):
     :param discipline: Discipline
     :return:
     """
-    time.sleep(random.random())
-    popup = driver.window_handles[1]
+    time.sleep(random.random() * 2)
+    while 1:
+        try:
+            popup = driver.window_handles[1]
+            break
+        except IndexError:
+            pass
     driver.switch_to.window(popup)
 
     course_title = unicode((driver.find_element_by_id("CourseTitle")).text).strip()
