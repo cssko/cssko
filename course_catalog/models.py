@@ -47,7 +47,8 @@ class CourseManager(models.Manager):
                        "COUNT(s.course_id)"
                        "FROM course_catalog_course c LEFT JOIN course_catalog_section s "
                        "ON c.course_number = s.course_id WHERE c.discipline_id = (?) AND c.graduate_level = (?) "
-                       "GROUP BY c.course_number, c.discipline_id ORDER BY c.course_number ASC", (discipline, grad_level))
+                       "GROUP BY c.course_number, c.discipline_id ORDER BY c.course_number ASC",
+                       (discipline, grad_level))
         for row in cursor.fetchall():
             c = self.model(course_number=row[0],
                            discipline_id=row[1],
@@ -60,8 +61,8 @@ class CourseManager(models.Manager):
                            alternating_years=row[8],
                            graduate_level=row[9])
             c.section_count = row[10]
-            #term_counts = self.get_term_counts(grad_level, row[0])
-            #c.term_counts = term_counts
+            # term_counts = self.get_term_counts(grad_level, row[0])
+            # c.term_counts = term_counts
             result_list.append(c)
         # results['results_list'] = result_list
         return result_list
@@ -109,6 +110,70 @@ class Course(models.Model):
         return self.course_number
 
 
+class Term(models.Model):
+    term_name = models.CharField(max_length=50)
+    term_code = models.CharField(max_length=50, primary_key=True)
+
+    def __unicode__(self):
+        return self.term_name
+
+
+class Session(models.Model):
+    session_name = models.CharField(max_length=50)
+    session_code = models.CharField(max_length=50, primary_key=True)
+
+    def __unicode__(self):
+        return self.session_name
+
+
+class College(models.Model):
+    short_name = models.CharField(primary_key=True, max_length=25)
+    long_name = models.CharField(max_length=100)
+    phone_number = models.CharField(max_length=15)
+    website = models.URLField()
+
+    def __unicode__(self):
+        return self.long_name
+
+
+class Building(models.Model):
+    building_code = models.CharField(primary_key=True, max_length=25)
+    name = models.CharField(max_length=50)
+    address = models.CharField(max_length=100)
+    campus = models.CharField(max_length=50)
+
+    def __unicode__(self):
+        return self.name
+
+
+class Department(models.Model):
+    name = models.CharField(primary_key=True, max_length=50)
+    department_code = models.CharField(max_length=10)
+    phone_number = models.CharField(max_length=25)
+    fax_number = models.CharField(max_length=25)
+    building = models.ForeignKey(Building)
+    room_number = models.CharField(max_length=15)
+    web_site = models.URLField()
+    email = models.EmailField()
+
+
+class Professor(models.Model):
+    alias = models.CharField(primary_key=True, max_length=25)
+    email = models.EmailField()
+    last_name = models.CharField(max_length=25)
+    first_name = models.CharField(max_length=25)
+    full_name = models.CharField(max_length=100, null=True)
+    title = models.CharField(max_length=50, default='')
+    office_phone_number = models.CharField(max_length=15, null=True)
+    office_number = models.CharField(max_length=25, null=True)
+    office_building = models.ForeignKey(Building, null=True)
+    # department = models.ForeignKey(Department, null=True)
+    dep = models.CharField(max_length=100, default='')
+
+    def __unicode__(self):
+        return '%s %s' % (self.first_name, self.last_name)
+
+
 class Section(models.Model):
     CLASS_CHOICES = (
         ('CI', 'Classroom'),
@@ -118,7 +183,8 @@ class Section(models.Model):
     course = models.ForeignKey(Course)
     call_number = models.IntegerField(primary_key=True)
     section_number = models.IntegerField()
-    course_materials_link = models.URLField(blank=True)
+    course_materials_link = models.URLField(null=True)
+    instructor = models.ForeignKey(Professor, null=True)
 
     def __unicode__(self):
         return unicode(self.course_id) + ": " + unicode(self.call_number)
@@ -144,22 +210,6 @@ class Section(models.Model):
         return subsections
 
 
-class Term(models.Model):
-    term_name = models.CharField(max_length=50)
-    term_code = models.CharField(max_length=50, primary_key=True)
-
-    def __unicode__(self):
-        return self.term_name
-
-
-class Session(models.Model):
-    session_name = models.CharField(max_length=50)
-    session_code = models.CharField(max_length=50, primary_key=True)
-
-    def __unicode__(self):
-        return self.session_name
-
-
 class SectionTerm(models.Model):
     term = models.ForeignKey(Term)
     course = models.ForeignKey(Course)
@@ -172,48 +222,12 @@ class SectionSession(models.Model):
     call_number = models.OneToOneField(Section, primary_key=True)
 
 
-class Building(models.Model):
-    building_code = models.CharField(primary_key=True, max_length=25)
-    name = models.CharField(max_length=50)
-    address = models.CharField(max_length=100)
-    campus = models.CharField(max_length=50)
-
-    def __unicode__(self):
-        return self.name
-
-
-class Department(models.Model):
-    name = models.CharField(primary_key=True, max_length=50)
-    department_code = models.CharField(max_length=10)
-    phone_number = models.CharField(max_length=25)
-    fax_number = models.CharField(max_length=25)
-    building = models.ForeignKey(Building)
-    room_number = models.CharField(max_length=15)
-    web_site = models.URLField()
-    email = models.EmailField()
-
-
-class Professor(models.Model):
-    id = models.AutoField
-    last_name = models.CharField(max_length=25)
-    first_name = models.CharField(max_length=25)
-    email = models.EmailField()
-    office_phone_number = models.CharField(max_length=15)
-    office_number = models.CharField(max_length=25, null=True)
-    department = models.ForeignKey(Department, null=True)
-
-    def __unicode__(self):
-        return unicode(self.first_name) + " " + unicode(self.last_name)
-
-
 class Lecture(Section):
     instruction_format = models.CharField(max_length=25, default='Lecture')
     class_format = models.CharField(max_length=2, choices=Section.CLASS_CHOICES)
     days = models.CharField(max_length=10)
     class_start = models.TimeField()
     class_end = models.TimeField()
-    instructor = models.CharField(max_length=50)
-    instructor_email = models.EmailField(blank=True)
     campus = models.CharField(max_length=50)
     classroom = models.CharField(max_length=50, blank=True)
 
@@ -224,8 +238,6 @@ class Lab(Section):
     days = models.CharField(max_length=10)
     class_start = models.TimeField()
     class_end = models.TimeField()
-    instructor = models.CharField(max_length=50)
-    instructor_email = models.EmailField(blank=True)
     campus = models.CharField(max_length=50)
     classroom = models.CharField(max_length=50, blank=True)
 
@@ -236,8 +248,6 @@ class Recitation(Section):
     days = models.CharField(max_length=10)
     class_start = models.TimeField()
     class_end = models.TimeField()
-    instructor = models.CharField(max_length=50)
-    instructor_email = models.EmailField(blank=True)
     campus = models.CharField(max_length=50)
     classroom = models.CharField(max_length=50, blank=True)
 
@@ -248,8 +258,6 @@ class Clinical(Section):
     days = models.CharField(max_length=10)
     class_start = models.TimeField()
     class_end = models.TimeField()
-    instructor = models.CharField(max_length=50)
-    instructor_email = models.EmailField(blank=True)
     campus = models.CharField(max_length=50)
     classroom = models.CharField(max_length=50, blank=True)
 
@@ -260,8 +268,6 @@ class IndividualStudy(Section):
     days = models.CharField(max_length=10)
     class_start = models.TimeField()
     class_end = models.TimeField()
-    instructor = models.CharField(max_length=50)
-    instructor_email = models.EmailField(blank=True)
     campus = models.CharField(max_length=50)
     classroom = models.CharField(max_length=50, blank=True)
 
@@ -272,8 +278,6 @@ class LabLecture(Section):
     days = models.CharField(max_length=10)
     class_start = models.TimeField()
     class_end = models.TimeField()
-    instructor = models.CharField(max_length=50)
-    instructor_email = models.EmailField(blank=True)
     campus = models.CharField(max_length=50)
     classroom = models.CharField(max_length=50, blank=True)
 
@@ -284,8 +288,6 @@ class Seminar(Section):
     days = models.CharField(max_length=10)
     class_start = models.TimeField()
     class_end = models.TimeField()
-    instructor = models.CharField(max_length=50)
-    instructor_email = models.EmailField(blank=True)
     campus = models.CharField(max_length=50)
     classroom = models.CharField(max_length=50, blank=True)
 
@@ -334,8 +336,6 @@ class Other(Section):
     days = models.CharField(max_length=10)
     class_start = models.TimeField()
     class_end = models.TimeField()
-    instructor = models.CharField(max_length=50)
-    instructor_email = models.EmailField(blank=True)
     campus = models.CharField(max_length=50)
     classroom = models.CharField(max_length=50, blank=True)
 
