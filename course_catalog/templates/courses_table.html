@@ -1,0 +1,149 @@
+{% extends 'index.html' %}
+{% load catalog_tags %}
+{% block css %}
+  <link href="https://cdn.datatables.net/1.10.8/css/dataTables.bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.datatables.net/responsive/1.0.7/css/responsive.bootstrap.min.css" rel="stylesheet">
+{% endblock %}
+{% block title %}
+  {{ discipline.name }}
+{% endblock %}
+{% block body %}
+  <h1 style="text-align: center">{{ discipline }}</h1>
+  <div>
+    <ul class="nav nav-tabs" role="tablist">
+      <li role="presentation" class="active"><a href="#undergrad" aria-controls="undergraduate courses" role="tab" data-toggle="tab">Undergraduate</a></li>
+      <li role="presentation"><a href="#grad" aria-controls="Graduate courses" role="tab" data-toggle="tab">Graduate</a>
+      </li>
+    </ul>
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="undergrad">
+        {% if undergrad|length < 1 %}
+          There are no undergrad courses for {{ discipline }}!
+        {% else %}
+          <table class="course-table dt-responsive table table-striped table-bordered" cellspacing="0" width="100%" id="undergrad">
+            <thead>
+            <tr>
+              <td>Course ID</td>
+              <td>Course Title (Click for description)</td>
+              <td>Credits</td>
+              <td>Fall Availability</td>
+              <td>Spring Availability</td>
+              <td>Summer Availability</td>
+              <td>Alternating Years</td>
+              <td>Total Section Count</td>
+            </tr>
+            </thead>
+            {% for course in undergrad %}
+              <tr>
+                <td>
+                  <a href="{% url 'course_catalog:course' course.course_number %}">{{ course.course_number }}</a>
+                </td>
+                <td>
+                  <a href="#{{ course.course_number }}" data-toggle="modal">{{ course.course_title }}</a>
+                </td>
+                <td>{{ course.credit_hours }}</td>
+                <td>{% availability_tag course.fall_availability %}</td>
+                <td>{% availability_tag course.spring_availability %}</td>
+                <td>{% availability_tag course.summer_availability %}</td>
+                <td>{% availability_tag course.alternating_years %}</td>
+                <td>{{ course.section_count }}</td>
+              </tr>
+              <div class="modal fade" id="{{ course.course_number }}" tabindex="-1" role="dialog"
+                   aria-labelledby="{{ course.course_title }}Label">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                              aria-hidden="true">&times;</span></button>
+                      <h4 class="modal-title" id="{{ course.course_title }}Label">{{ course.course_title }}</h4>
+                    </div>
+                    <div class="modal-body">
+                      {{ course.description }}
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Cool Thanks</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+          </table>
+        {% endif %}
+      </div>
+      <div role="tabpanel" class="tab-pane fade in" id="grad">
+        {% if grad|length < 1 %}
+          There are no graduate courses for {{ discipline }}!
+        {% else %}
+          <table class="course-table dt-responsive table table-striped table-bordered" cellspacing="0" width="100%" id="grad">
+            <thead>
+            <tr>
+              <td>Course ID</td>
+              <td>Course Title</td>
+              <td>Credits</td>
+              <td>Fall Availability</td>
+              <td>Spring Availability</td>
+              <td>Summer Availability</td>
+              <td>Alternating Years</td>
+              <td>Total Section Count</td>
+            </tr>
+            </thead>
+            {% for course in grad %}
+              <tr>
+                <td>
+                  <a href="{% url 'course_catalog:course' course.course_number %}">{{ course.course_number }}</a>
+                </td>
+                <td>
+                  <a href="#{{ course.course_number }}" data-toggle="modal">{{ course.course_title }}</a>
+                </td>
+                <td>{{ course.credit_hours }}</td>
+                <td>{% availability_tag course.fall_availability %}</td>
+                <td>{% availability_tag course.spring_availability %}</td>
+                <td>{% availability_tag course.summer_availability %}</td>
+                <td>{% availability_tag course.alternating_years %}</td>
+                <td>{{ course.section_count }}</td>
+              </tr>
+              <div class="modal fade" id="{{ course.course_number }}" tabindex="-1" role="dialog"
+                   aria-labelledby="{{ course.course_title }}Label">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                              aria-hidden="true">&times;</span></button>
+                      <h4 class="modal-title" id="{{ course.course_title }}Label">{{ course.course_title }}</h4>
+                    </div>
+                    <div class="modal-body">
+                      {{ course.description }}
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Cool Thanks</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+          </table>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+{% endblock %}
+{% block js %}
+  <script src="http://cdn.datatables.net/1.10.8/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.10.8/js/dataTables.bootstrap.min.js"></script>
+  <script src="https://cdn.datatables.net/responsive/1.0.7/js/dataTables.responsive.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/1.0.3/js/dataTables.buttons.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/1.0.3/js/buttons.bootstrap.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/1.0.3/js/buttons.colVis.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      $('table.course-table').DataTable({
+        responsive: true
+      });
+    });
+  $('a[data-toggle="tab"]').on('shown.bs.tab', function(e){
+    $('.course-table:visible').each(function(e){
+      $(this).DataTable().columns.adjust().responsive.recalc();
+    })
+  })
+  </script>
+{% endblock %}
