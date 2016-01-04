@@ -48,19 +48,13 @@ def catalog_index_view(request):
     :param request:
     :return:
     """
-    if request.GET.get('q'):
+    if request.GET:
         form = CourseSearchForm(request.GET, {'user': request.user.groups})
         sq = form.search()
-        query = form.cleaned_data['q']
-        search_in = form.cleaned_data['i']
-        sort = form.cleaned_data['sort']
-        grad = form.cleaned_data['grad']
-        facets = sq.facet_counts()
 
         return render(request, "search_results.html",
                       RequestContext(request,
-                                     {'query': query, 'sq': sq, 'form': form, 'i': search_in,
-                                      'sort': sort, 'grad': grad, 'facets': facets}))
+                                     {'sq': sq, 'form': form}))
     else:
         disciplines = Discipline.objects.with_course_counts()
         letter_groups = ['ABCD', 'EFGHI', 'JKLM', 'NOPQR', 'STUV', 'WXYZ']
