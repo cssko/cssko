@@ -22,7 +22,7 @@
     <li><a href="{% url 'course_catalog:discipline' course.discipline.discipline %}">{{ course.discipline }}</a></li>
     <li class="active">{{ course.course_title }}</li>
   </ol>
-    <div class="panel-group" id="accordion-{{ course.course_number }}" role="tablist" aria-multiselectable="true">
+    <div class="panel-group center-block" id="accordion-{{ course.course_number }}" role="tablist" aria-multiselectable="true" style="max-width: 800px">
       <div class="panel panel-default">
         <div class="panel-heading" role="tab" id="{{ course.course_number }}">
           <h4 class="panel-title">
@@ -43,11 +43,11 @@
              aria-labelledby="{{ course.course_number }}">
           <div class="panel-body">
             <div class="row">
-              <div class="col-xs-12 col-sm-8" style="text-align: justify">{{ course.description }}</div>
-              <div class="col-xs-12 col-sm-4">
+              <div class="col-sm-12" style="text-align: justify"><p>{{ course.description }}</p></div>
+              <div class="col-xs-12">
                 <table class="table table-condensed">
                   <tr>
-                    <td><b>Fall Availability: </b></td>
+                    <td><b>Fall Availability:</b></td>
                     <td>{% availability_tag course.fall_availability %}</td>
                   </tr>
                   <tr>

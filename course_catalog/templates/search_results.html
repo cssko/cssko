@@ -17,14 +17,14 @@
   </script>
 {% endblock %}
 {% block title %}
-  'Search Results
+  Search Results
 {% endblock %}
 {% block body %}
 <table class="table table-striped table-bordered" cellspacing="0" width="100%" id="result_table">
 <thead>
 <tr>
   <td>Course ID</td>
-  <td>Course Title</td>
+  <td>Course Title (click for description)</td>
   <td>Discipline</td>
   <td>Graduate Level</td>
 </tr>
@@ -32,11 +32,29 @@
 <tbody>
 {% for result in sq %}
   <tr>
-  <td><a href="/coursecatalog/{{ result.discipline }}/{{ result.course_id }}">{{ result.course_id }}</a></td>
-  <td>{{ result.course_title }}</td>
+  <td><a href="{% url 'course_catalog:course' result.course_id %}">{{ result.course_id }}</a></td>
+  <td><a href="#{{ result.course_id }}" data-toggle="modal">{{ result.course_title }}</a></td>
   <td><a href={% url 'course_catalog:discipline' result.discipline %}>{{ result.discipline }}</a></td>
   <td>{{ result.graduate_level }}</td>
   </tr>
+  <div class="modal fade" id="{{ result.course_id }}" tabindex="-1" role="dialog"
+       aria-labelledby="{{ result.course_title }}Label">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                  aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="{{ result.course_title }}Label">{{ result.course_title }}</h4>
+        </div>
+        <div class="modal-body">
+          {{ result.course_description }}
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cool Thanks</button>
+        </div>
+      </div>
+    </div>
+  </div>
 {% endfor %}
 </tbody>
 </table>
