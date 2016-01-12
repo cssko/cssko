@@ -1,10 +1,10 @@
 from django.shortcuts import render, get_object_or_404
 from django.template import RequestContext
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView
 from django.views.generic.edit import FormMixin
 
 from course_catalog.forms import CourseSearchForm, CourseTermForm
-from course_catalog.models import Discipline, Course, Section, Term, Professor
+from course_catalog.models import Discipline, Course, Section, Term
 
 
 class CourseSectionsView(ListView, FormMixin):

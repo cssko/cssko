@@ -5,7 +5,7 @@ from django.db import models, connection
 class DisciplineManager(models.Manager):
     def with_course_counts(self):
         """ Modified version of the django example on managers. Thanks django.
-        :return:
+        :return: List of Disciplines with added field course_count.
         """
         cursor = connection.cursor()
         cursor.execute("SELECT d.discipline, d.name, COUNT(*) "
@@ -23,14 +23,12 @@ class DisciplineManager(models.Manager):
 
 class CourseManager(models.Manager):
     def with_section_counts(self, discipline, grad_level):
-        """
-        Modified version of the django example on managers. Thanks django.
+        """ Modified version of the django example on managers. Thanks django.
         :param discipline:
         :param grad_level:
-        :return:
+        :return: List of Courses with added field section_count.
         """
 
-        # results = {}
         result_list = []
         cursor = connection.cursor()
         cursor.execute("SELECT "
@@ -61,10 +59,7 @@ class CourseManager(models.Manager):
                            alternating_years=row[8],
                            graduate_level=row[9])
             c.section_count = row[10]
-            # term_counts = self.get_term_counts(grad_level, row[0])
-            # c.term_counts = term_counts
             result_list.append(c)
-        # results['results_list'] = result_list
         return result_list
 
     def get_term_counts(self, grad_level, course_id):
@@ -192,7 +187,7 @@ class Section(models.Model):
     def get_subsections(self):
         """
         Forgive me Guido, for I have sinned.
-        :return:
+        :return: List of Subsections for a section. This could be things like Lectures, Labs, etc.
         """
         ss = ['self.lecture', 'self.lab', 'self.recitation', 'self.clinical',
               'self.individualstudy', 'self.lablecture', 'self.seminar', 'self.other']
@@ -338,9 +333,6 @@ class Other(Section):
     class_end = models.TimeField()
     campus = models.CharField(max_length=50)
     classroom = models.CharField(max_length=50, blank=True)
-
-    # class Meta:
-    #     unique_together = ('class_format', '')
 
 
 class Seats(models.Model):
