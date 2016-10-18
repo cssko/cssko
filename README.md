@@ -1,16 +1,7 @@
 # cssko.me
-*This repository contains the source code for my website https://www.cssko.me*
+*This repository contains the source code for my website located at http://www.cssko.me*
 
-## Project Layout
+## Course Catalog
+Currently there is a course catalog for the University of Cincinnati available at http://cssko.me/course-catalog/
 
-### Top Level
-
-| Name           | Description          |
-| -------------  | ----------- |
-| course_catalog | Contains the source code for the Course Catalog portion of the site. |
-| cssko          | Contains the settings for the project.|
-| homepage       | A small django app for the homepage portion of the site.|
-|templates       | Contains the master page template, index.html  |
-
-### course_catalog
-
+Note: For the time being the search is disabled as UC has changed their SIS to Peoplesoft, necessitating a rewrite to my scraper to get updated information. 
