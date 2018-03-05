@@ -29,6 +29,7 @@ urlpatterns = [
     path('blog/', include(wagtail_urls)),
     path('documents/', include(wagtaildocs_urls)),
     path('', include('homepage.urls', namespace='homepage')),
+    path('catalog/', include('bearcatalog.urls', namespace='bearcatalog'))
 ]
 
 if settings.DEBUG:

@@ -1,0 +1,43 @@
+{% extends 'bearcatalog.html' %}
+{% load static %}
+{% block title %}{{ subject.long_name }}{% endblock %}
+{% block css %}
+  <link href="{% static 'css/datatables.min.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+  <nav aria-label="breadcrumb" role="navigation">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'bearcatalog:catalog' %}">Catalog</a></li>
+      <li class="breadcrumb-item active" aria-current="page">{{ subject.long_name }}</li>
+    </ol>
+  </nav>
+  <table class="table table-striped dataTable" cellspacing="0" width="100%" id="courses">
+    <thead>
+      <tr>
+        <td>Number</td>
+        <td>Title</td>
+{#        <td>Last Updated</td>#}
+      </tr>
+    </thead>
+    <tbody>
+      {% for course in courses %}
+        <tr>
+          <td>{{ course.number }}</td>
+          <td><a href="{% url 'bearcatalog:course' subject=subject.short_name number=course.number%}">{{ course.title }}</a></td>
+{#          <td>{{ course.last_updated }}</td>#}
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}
+{% block js %}
+  <script src="{% static 'js/datatables.min.js' %}"></script>
+  <script>
+  $(document).ready(function() {
+    $('#courses').DataTable({
+      responsive: true
+    });
+  } );
+  </script>
+{% endblock %}

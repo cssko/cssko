@@ -1,0 +1,36 @@
+{% extends 'bearcatalog.html' %}
+{% block title %}{{ object.title }}{% endblock %}
+{% block breadcrumb %}{% endblock %}
+{% block body %}
+  <nav aria-label="breadcrumb" role="navigation">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'bearcatalog:catalog' %}">Catalog</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'bearcatalog:subject' pk=object.subject_id %}">{{ object.subject.long_name }}</a></li>
+      <li class="breadcrumb-item active" aria-current="page">{{ object.title }}</li>
+    </ol>
+  </nav>
+  <div class="card">
+    <div class="card-header">
+      <div class="row">
+        <div class="col-md-3"><span class="badge badge-secondary">{{ object.subject_id }}</span> <span class="badge badge-secondary">{{ object.number }}</span></div>
+        <div class="col-md-6 text-md-center"></div>
+        <div class="col-md-3 text-md-right">
+{#          <button type="button" class="btn">#}
+{#            Credit Hours <span class="badge badge-light">{{ object.academic_credits }}</span>#}
+{#            <span class="sr-only">unread messages</span>#}
+{#          </button>#}
+          <span class="badge badge-secondary">Credit Hours: {{ object.academic_credits }}</span>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h4 class="card-title">{{ object.title }}</h4>
+{#      <h6 class="card-subtitle mb-2 text-muted"></h6>#}
+      <p class="card-text">{{ object.description }}</p>
+    </div>
+    <div class="card-footer">
+      <small class="text-muted">Last updated: {{ object.last_updated }}</small>
+    </div>
+  </div>
+
+{% endblock %}
