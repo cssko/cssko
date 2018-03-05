@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% load wagtailcore_tags %}
+
+{% block body_class %}template-blogindexpage{% endblock %}
+
+{% block content %}
+  <div class="jumbotron jumbotron-fluid">
+    <div class="container">
+      <h1 class="display-4">{{ page.title }}</h1>
+      <p class="lead">This is a modified jumbotron that occupies the entire horizontal space of its parent.</p>
+    </div>
+  </div>
+  {#  <h1>{{ page.title }}</h1>#}
+
+  {#  <div class="intro">{{ page.intro|richtext }}</div>#}
+  <div class="card-deck">
+    {% for post in page.get_children %}
+
+      <div class="card mb-4">
+        <div class="card-header h4">
+          {{ post.title }}
+        </div>
+        <div class="card-body">
+          {% if post.specific.intro %}
+            <h5 class="card-title">{{ post.specific.intro }}</h5>
+          {% endif %}
+          <p class="card-text">{% include_block post.specific.body|truncatewords_html:50 %}</p>
+          <a href="{% pageurl post %}" class="btn btn-primary">Read More</a>
+        </div>
+        <div class="card-footer">
+          <small class="text-muted">Posted {{ post.last_published_at }}</small>
+        </div>
+      </div>
+
+      {##}
+      {#    <h2><a href="{% pageurl post %}">{{ post.title }}</a></h2>#}
+      {#    {{ post.specific.intro }}#}
+      {#    {{ post.specific.body|richtext|truncatechars_html:350 }}#}
+    {% endfor %}
+  </div>
+{% endblock %}

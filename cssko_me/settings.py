@@ -13,8 +13,8 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
+PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = os.path.dirname(PROJECT_DIR)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
@@ -30,20 +30,40 @@ ALLOWED_HOSTS = []
 if not DEBUG:
     ALLOWED_HOSTS.append(".cssko.me")
 
-
 # Application definition
 
 INSTALLED_APPS = [
+    # Django
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # Wagtail
+    'wagtail.contrib.forms',
+    'wagtail.contrib.redirects',
+    'wagtail.embeds',
+    'wagtail.sites',
+    'wagtail.users',
+    'wagtail.snippets',
+    'wagtail.documents',
+    'wagtail.images',
+    'wagtail.search',
+    'wagtail.admin',
+    'wagtail.core',
+    'modelcluster',
+    'taggit',
+
+    # My apps
     'homepage.apps.HomepageConfig',
+    'blog.apps.BlogConfig',
+    'bearcatalog.apps.BearcatalogConfig',
 ]
 
 MIDDLEWARE = [
+    # Django
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -51,6 +71,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # Wagtail
+    'wagtail.core.middleware.SiteMiddleware',
+    'wagtail.contrib.redirects.middleware.RedirectMiddleware',
 ]
 
 ROOT_URLCONF = 'cssko_me.urls'
@@ -58,8 +81,9 @@ ROOT_URLCONF = 'cssko_me.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')]
-        ,
+        'DIRS': [
+            os.path.join(PROJECT_DIR, 'templates'),
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -74,7 +98,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'cssko_me.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
@@ -88,7 +111,6 @@ DATABASES = {
         'PORT': '',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
@@ -108,7 +130,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/2.0/topics/i18n/
 
@@ -122,8 +143,28 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
+STATICFILES_FINDERS = [
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+]
+
+STATICFILES_DIRS = [
+    os.path.join(PROJECT_DIR, 'static'),
+]
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+
+# Wagtail settings
+
+WAGTAIL_SITE_NAME = "cssko_me"
+
+# Base URL to use when referring to full URLs within the Wagtail admin backend -
+# e.g. in notification emails. Don't include '/admin' or a trailing slash
+BASE_URL = 'http://cssko.me'
