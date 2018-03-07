@@ -1,8 +1,9 @@
-from django.http import HttpResponseRedirect, FileResponse, Http404
+from django.core.mail import EmailMessage
+from django.http import FileResponse, Http404
 from django.shortcuts import render
 from django.views import View
+
 from .forms import ContactForm
-from django.core.mail import send_mail
 
 
 class IndexView(View):
@@ -47,5 +48,16 @@ class Contact(View):
     def post(self, request, *args, **kwargs):
         form = ContactForm(request.POST)
         if form.is_valid():
-            pass
+            comment = form.cleaned_data['comment']
+            from_email = form.cleaned_data['email']
+            name = form.cleaned_data['name']
+            contact_email = EmailMessage(
+                'Contact Form Submission from {}'.format(name),
+                comment,
+                from_email,
+                ['chris@cssko.me'],
+                headers={'Reply-To': from_email}
+            )
+            # contact_email.send()
+            return render(request, 'home/thanks.html')
         return render(request, self.template_name, {'form': form})

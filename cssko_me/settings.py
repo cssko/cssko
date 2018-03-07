@@ -161,6 +161,9 @@ STATIC_URL = '/static/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
+# Email Settings
+EMAIL_BACKEND = 'django.core.mail.backends.dummy.EmailBackend'
+
 # Wagtail settings
 
 WAGTAIL_SITE_NAME = "cssko_me"
