@@ -1,12 +1,14 @@
 {% extends "base.html" %}
 
-{% block body_class %}template-homepage{% endblock %}
-
+{% block title %}
+  Chris Kothman
+{% endblock %}
 {% block content %}
-  <div class="jumbotron jumbotron-fluid">
-    <div class="container">
-      <h1 class="display-4">Hello</h1>
-      <p class="lead">This is a modified jumbotron that occupies the entire horizontal space of its parent.</p>
-    </div>
+  <div class="row">
+    <div class="col-sm">University of Cincinnati</div>
+    <div class="col-sm">Computer Science</div>
+    <div class="col-sm">Class of 2020</div>
   </div>
+
+  <p>{% lorem random %}</p>
 {% endblock %}
