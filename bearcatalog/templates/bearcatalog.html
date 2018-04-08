@@ -1,0 +1,130 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <title>{% block title %}BearCatalog{% endblock %}</title>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <link href="https://fonts.googleapis.com/css?family=Gentium+Book+Basic|Open+Sans|Roboto+Mono" rel="stylesheet">
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="{% static 'scss/bearcatalog.css' %}">
+  <link rel="stylesheet" href="{% static 'css/font-awesome.css' %}">
+  {% block css %}{% endblock %}
+</head>
+<body style="padding-top: 4.5rem;">
+<nav class="navbar navbar-expand-lg fixed-top navbar-light bg-light">
+  <a class="navbar-brand" href="{% url 'bearcatalog:catalog' %}">
+    <strong>
+      <span style="color: #E00122">BearCat</span><span style="color: #000000">alog</span>
+    </strong>
+  </a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <a class="nav-link disabled">API</a>
+      </li>
+    </ul>
+    <span class="navbar-text">
+        <a href="{% url 'homepage:index' %}">cssko.me</a>
+      </span>
+  </div>
+</nav>
+<main role="main" class="container">
+  {% block body %}
+    {% block search %}
+      <h1 style="text-align: center"><strong><span style="color: #E00122">BearCat</span>alog</strong></h1>
+      <form>
+        <div class="form-group">
+
+          <label for="courseSearch">Search for a course</label>
+          <div class="input-group">
+            <input type="email" class="form-control" id="courseSearch" aria-describedby="course-search-help"
+                   placeholder="e.g. ENGL1001">
+            <span class="input-group-text"><i class="fa fa-search"></i></span>
+          </div>
+          {#          <label for="exampleFormControlInput1">Search for a course</label>#}
+          {#          <div class="input-group">#}
+          {#            <input type="text" class="form-control" placeholder="e.g. ENGL1001" aria-label="course"#}
+          {#                   aria-describedby="basic-addon1">#}
+          {#            <span class="input-group-addon" id="basic-addon1"><i class="fa fa-search"></i></span>#}
+          {#          </div>#}
+        </div>
+      </form>
+      {% block results %}{% endblock %}
+    {% endblock %}
+
+    {% block catalog %}
+      <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item">
+          <a class="nav-link active" id="home-tab" data-toggle="tab" href="#courses-A-D" role="tab" aria-controls="home"
+             aria-selected="true">A-D</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="profile-tab" data-toggle="tab" href="#courses-E-I" role="tab" aria-controls="profile"
+             aria-selected="false">E-I</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="contact-tab" data-toggle="tab" href="#courses-J-M" role="tab" aria-controls="contact"
+             aria-selected="false">J-M</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="profile-tab" data-toggle="tab" href="#courses-N-R" role="tab" aria-controls="profile"
+             aria-selected="false">N-R</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="contact-tab" data-toggle="tab" href="#courses-S-V" role="tab" aria-controls="contact"
+             aria-selected="false">S-V</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="contact-tab" data-toggle="tab" href="#courses-W-Z" role="tab" aria-controls="contact"
+             aria-selected="false">W-Z</a>
+        </li>
+      </ul>
+      <div class="tab-content" id="myTabContent">
+        {% for key, value in subjects %}
+          <div class="tab-pane fade {% if forloop.first %}show active{% endif %}" id="courses-{{ key }}"
+               role="tabpanel" aria-labelledby="courses-{{ key }}">
+            <div id="accordion" role="tablist">
+              {% for letter in value.items %}
+                <div class="card">
+                  <div class="card-header" role="tab" id="heading{{ letter.0 }}" data-toggle="collapse"
+                       href="#collapse{{ letter.0 }}" aria-expanded="false" aria-controls="collapse{{ letter.0 }}">
+                    {{ letter.0 }} - {{ letter.1|length }} subject{{ letter.1|length|pluralize }}
+                  </div>
+
+                  <div id="collapse{{ letter.0 }}" class="collapse" role="tabpanel"
+                       aria-labelledby="heading{{ letter.0 }}" data-parent="#accordion">
+                    <div class="card-body">
+                      <div class="list-group list-group-flush">
+                        {% for subject in letter.1 %}
+                          <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
+                             href="{% url 'bearcatalog:subject' pk=subject.short_name %}">
+                            {{ subject.short_name }} - {{ subject.long_name }}
+                            <span class="badge badge-secondary">{{ subject.course_count }}</span>
+                          </a>
+                        {% endfor %}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% endblock %}
+  {% endblock %}
+</main>
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+{% block js %}{% endblock %}
+</body>
+</html>

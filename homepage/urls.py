@@ -1,10 +1,13 @@
 from django.conf.urls import url
+from django.urls import path
 
-from . import views
+from .views import IndexView,WorkExperience, Activities, Contact, Resume
 
 app_name = 'homepage'
 urlpatterns = [
-    url(r'^$', views.index, name='index'),
-    url(r'contact', views.contact_page, name='contact'),
-    url(r'about', views.about_page, name='about')
+    path('', IndexView.as_view(), name='index'),
+    path('work_experience', WorkExperience.as_view(), name='work_experience'),
+    path('activities', Activities.as_view(), name='activities'),
+    path('resume', Resume.as_view(), name='resume'),
+    path('contact', Contact.as_view(), name='contact'),
 ]
