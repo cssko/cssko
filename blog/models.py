@@ -1,5 +1,6 @@
 from django import forms
 from django.db import models
+from django.template.loader import render_to_string
 from django.utils.safestring import mark_safe
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
@@ -69,15 +70,18 @@ class BlogIndexPage(Page):
 
     def get_context(self, request, *args, **kwargs):
         context = super().get_context(request)
+
         blogs = BlogPage.objects.live()
-        paginator = Paginator(blogs, 5)
-        page = request.GET.get('page')
-        try:
-            paginated_blogs = paginator.page(page)
-        except PageNotAnInteger:
-            pass
-        except EmptyPage:
-            pass
+        context['blog_pages'] = blogs
+        # TODO: Remember what in the hell I was doing here.
+        # paginator = Paginator(blogs, 5)
+        # page = request.GET.get('page')
+        # try:
+        #     paginated_blogs = paginator.page(page)
+        # except PageNotAnInteger:
+        #     pass
+        # except EmptyPage:
+        #     pass
         return context
 
 

@@ -2,18 +2,44 @@
 {% load static %}
 {% load wagtailcore_tags %}
 {% load wagtailimages_tags %}
-
+{% load disqus_tags %}
 {% block body_class %}template-blogpage{% endblock %}
 {% block extra_css %}
   <link rel="stylesheet" href="{% static 'css/pygments.css' %}">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.9.0/dist/katex.min.css" integrity="sha384-TEMocfGvRuD1rIAacqrknm5BQZ7W7uWitoih+jMNFXQIbNl16bO8OZmylH/Vi/Ei" crossorigin="anonymous">
 {% endblock %}
+{% block extra_js %}
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.9.0/dist/katex.min.js" integrity="sha384-jmxIlussZWB7qCuB+PgKG1uLjjxbVVIayPJwi6cG6Zb4YKq0JIw+OMnkkEC7kYCq" crossorigin="anonymous"></script>
+  <script>
+      for (let el of document.getElementsByClassName('katex-inline')) {
+          katex.render(el.getAttribute('data-katex-inline'), el, {
+              displayMode: false,
+              throwOnError: false,
+              errorColor: '#cc0000',
+          });
+      }
+
+      for (let el of document.getElementsByClassName('katex-block')) {
+          katex.render(el.getAttribute('data-katex-block'), el, {
+              displayMode: true,
+              throwOnError: false,
+              errorColor: '#cc0000',
+          });
+      }
+  </script>
+{% endblock %}
+
 {% block content %}
 
   <div class="row">
-    <div class="col-md-12">
+    <div class="col">
       <h1>{{ page.title }}</h1>
       <p class="lead">{{ page.date }}</p>
-      <hr>
+    </div>
+  </div>
+  <hr>
+  <div class="row">
+    <div class="col">
       {#    TODO: Something with the categories  #}
       {#      {% with categories=page.categories.all %}#}
       {#        {% if categories %}#}
@@ -28,22 +54,34 @@
       {#          </ul>#}
       {#        {% endif %}#}
       {#      {% endwith %}#}
+
       {% if page.intro %}
         <div class="lead"><em>{{ page.intro }}</em></div>
       {% endif %}
-      {% include_block page.body %}
 
+      {% include_block page.body %}
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col">
       {% if page.tags.all|length > 1 %}
         <hr>
         Tags:
         {% for tag in page.tags.all %}
-          <a href="#" class="badge badge-primary">{{ tag }}</a>
+          <a href="{% slugurl 'tags' %}?tag={{ tag }}" class="badge badge-primary">{{ tag }}</a>
         {% endfor %}
       {% endif %}
       <hr>
       <p><a href="{{ page.get_parent.url }}">Return to blog</a></p>
     </div>
   </div>
+
+  <div class="row">
+      {% include_comments %}
+  </div>
+
+
 
 
 {% endblock %}

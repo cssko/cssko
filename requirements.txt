@@ -1,5 +1,6 @@
+draftjs_exporter
 Django >= 2.0.2
-wagtail >= 2.0
+wagtail >= 2.1
 Pygments >= 2.2.0
 requests >= 2.18.4
 requests-futures >= 0.9.7

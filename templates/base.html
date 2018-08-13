@@ -25,7 +25,7 @@
   {# Global stylesheets #}
   <link rel="stylesheet" type="text/css" href="{% static 'css/cssko_me.css' %}">
   <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B" crossorigin="anonymous">
   <link rel="stylesheet" href="{% static 'css/font-awesome.css' %}">
   {% block extra_css %}
     {# Override this in templates to add extra stylesheets #}
@@ -49,10 +49,10 @@
             Portfolio
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item {% if active_nav == 'resume' %}active{% endif %}" href="{% url 'homepage:resume' %}">
-              Résumé
-              {% if active_nav == 'resume' %}<span class="sr-only">(current)</span>{% endif %}
-            </a>
+{#            <a class="dropdown-item {% if active_nav == 'resume' %}active{% endif %}" href="{% url 'homepage:resume' %}">#}
+{#              Résumé#}
+{#              {% if active_nav == 'resume' %}<span class="sr-only">(current)</span>{% endif %}#}
+{#            </a>#}
             <a class="dropdown-item {% if active_nav == 'work_experience' %}active{% endif %}" href="{% url 'homepage:work_experience' %}">
               Work Experience
               {% if active_nav == 'work_experience' %}<span class="sr-only">(current)</span>{% endif %}
@@ -61,11 +61,11 @@
               Activities / Projects
               {% if active_nav == 'activities' %}<span class="sr-only">(current)</span>{% endif %}
             </a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item {% if active_nav == 'contact' %}active{% endif %}" href="{% url 'homepage:contact' %}">
-              Contact Me
-              {% if active_nav == 'contact' %}<span class="sr-only">(current)</span>{% endif %}
-            </a>
+{#            <div class="dropdown-divider"></div>#}
+{#            <a class="dropdown-item {% if active_nav == 'contact' %}active{% endif %}" href="{% url 'homepage:contact' %}">#}
+{#              Contact Me#}
+{#              {% if active_nav == 'contact' %}<span class="sr-only">(current)</span>{% endif %}#}
+{#            </a>#}
           </div>
         </li>
         <li class="nav-item">
@@ -104,9 +104,9 @@
 <script type="text/javascript" src="{% static 'js/cssko_me.js' %}"></script>
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js" integrity="sha384-o+RDsa0aLu++PJvFqy8fFScvbHFLtbvScb8AjopnFD+iEQ7wo/CG0xlczd+2O/em" crossorigin="anonymous"></script>
 {% block extra_js %}
   {# Override this in templates to add extra javascript #}
 {% endblock %}
